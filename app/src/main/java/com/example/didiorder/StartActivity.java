@@ -13,6 +13,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import cn.bmob.v3.Bmob;
+
 public class StartActivity extends AppCompatActivity implements IStartView {
     private ButtonRectangle LoginButton ;
     private Context context;
@@ -21,6 +23,7 @@ public class StartActivity extends AppCompatActivity implements IStartView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(StartActivity.this);
+        Bmob.initialize(this, "548fef15f05340e44f8c7328a06d4ec0");
         context = StartActivity.this;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().addFlags(WindowManager.LayoutParams. FLAG_TRANSLUCENT_NAVIGATION);
@@ -45,5 +48,7 @@ public class StartActivity extends AppCompatActivity implements IStartView {
     @Override
     public void startLoginActivity() {
         startActivity(new Intent(context,LoginActivity.class));
+        finish();
     }
+
 }
