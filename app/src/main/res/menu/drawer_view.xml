@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/updata"
+            android:icon="@mipmap/ic_add_grey600_24dp"
+            android:title="上传新菜"/>
+        <item
+            android:id="@+id/income"
+            android:icon="@mipmap/ic_account_balance_wallet_grey600_24dp"
+            android:title="查看收入"/>
+    </group>
+
+
+</menu>
