@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initData();
         initView();
+        initClick();
     }
     private void initData(){
         user = BmobUser.getCurrentUser(this,User.class);
@@ -69,6 +70,13 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView)findViewById(R.id.nv_main_navigation);
         textView = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navigation_header_text);
         textView.setText("厨师A");
+    }
+    private void initClick(){
+        navigationView.setNavigationItemSelectedListener(item -> {
+            mDrawerLayout.closeDrawers();
+            Snackbar.make(toolbar,item.getTitle()+"被点击",Snackbar.LENGTH_SHORT).show();
+            return false;
+        });
     }
     private void setupViewPager() {
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
