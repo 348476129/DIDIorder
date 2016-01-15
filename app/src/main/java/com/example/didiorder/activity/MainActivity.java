@@ -2,6 +2,7 @@ package com.example.didiorder.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,8 @@ import com.example.didiorder.R;
 import com.example.didiorder.adapter.FragmentAdapter;
 import com.example.didiorder.bean.User;
 import com.example.didiorder.fragment.FragmentOrder;
+import com.example.didiorder.presenter.MainActivityPresenter;
+import com.example.didiorder.view.IMainView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -29,7 +32,7 @@ import java.util.List;
 
 import cn.bmob.v3.BmobUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IMainView{
     private  User user;
     private SystemBarTintManager tintManager;
     private Toolbar toolbar;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private SimpleDraweeView UsersimpleDraweeView;
     private Context context;
+    private MainActivityPresenter mainActivityPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams. FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_main);
         context=this;
+        mainActivityPresenter = new MainActivityPresenter(this);
         initData();
         initView();
         initClick();
@@ -76,7 +81,12 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView)findViewById(R.id.nv_main_navigation);
         textView = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navigation_header_text);
         textView.setText(user.getName());
-        UsersimpleDraweeView = (SimpleDraweeView)findViewById(R.id.navigation_header_image);
+        UsersimpleDraweeView = (SimpleDraweeView)navigationView.getHeaderView(0).findViewById(R.id.navigation_header_image);
+        if (user.getUser_image_url()!=null&&!user.getUser_image_url().isEmpty()){
+            Uri uri = Uri.parse(user.getUser_image_url());
+            mainActivityPresenter.setImageUri(uri);
+        }
+
     }
     private void initClick(){
         navigationView.setNavigationItemSelectedListener(item -> {
@@ -107,5 +117,10 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setTabsFromPagerAdapter(adapter);
+    }
+
+    @Override
+    public void setImageUri(Uri uri) {
+        UsersimpleDraweeView.setImageURI(uri);
     }
 }

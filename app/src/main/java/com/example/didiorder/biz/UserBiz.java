@@ -6,8 +6,13 @@ import android.util.Log;
 import com.example.didiorder.bean.User;
 import com.example.didiorder.tools.ErrorList;
 
+import java.io.File;
+
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
 import rx.Observable;
 
 /**
@@ -42,5 +47,60 @@ public class UserBiz implements IUserBiz {  //使用接口能够让 高层逻辑
         });
         return observable;
 
+    }
+
+    @Override
+    public Observable<User> updata(Context context, String name, String job, File file) { //更新个人资料
+        Observable<User> observable = Observable.create(subscriber -> {
+            if (file!=null){
+                BmobFile bmobFile = new BmobFile(file);
+                bmobFile.uploadblock(context, new UploadFileListener() {
+                    @Override
+                    public void onSuccess() {
+
+                        User newUser = new User();
+                        newUser.setJob(job);
+                        newUser.setUser_image_url(bmobFile.getFileUrl(context));
+                        newUser.setName(name);
+                        User user = BmobUser.getCurrentUser(context, User.class);
+                        newUser.update(context,user.getObjectId(),new UpdateListener() {
+                            @Override
+                            public void onSuccess() {
+                                subscriber.onNext(user);
+                                subscriber.onCompleted();
+                            }
+                            @Override
+                            public void onFailure(int code, String msg) {
+                                subscriber.onError(new Throwable(new ErrorList().getErrorMsg(code)));
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        subscriber.onError(new Throwable(new ErrorList().getErrorMsg(i)));
+                    }
+                });
+            }else {
+                User newUser = new User();
+                newUser.setJob(job);
+                newUser.setName(name);
+                User user = BmobUser.getCurrentUser(context, User.class);
+                newUser.update(context,user.getObjectId(),new UpdateListener() {
+                    @Override
+                    public void onSuccess() {
+                        subscriber.onNext(user);
+                        subscriber.onCompleted();
+                    }
+                    @Override
+                    public void onFailure(int code, String msg) {
+                        subscriber.onError(new Throwable(new ErrorList().getErrorMsg(code)));
+                    }
+                });
+
+            }
+        });
+        return observable;
     }
 }
