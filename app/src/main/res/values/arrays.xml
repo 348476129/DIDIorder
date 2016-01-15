@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="job">
+        <item>厨师</item>
+        <item>服务员</item>
+    </string-array>
+</resources>

@@ -1,5 +1,7 @@
 package com.example.didiorder.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,6 +21,7 @@ import com.example.didiorder.R;
 import com.example.didiorder.adapter.FragmentAdapter;
 import com.example.didiorder.bean.User;
 import com.example.didiorder.fragment.FragmentOrder;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
@@ -36,12 +39,15 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private  TextView textView;
     private NavigationView navigationView;
+    private SimpleDraweeView UsersimpleDraweeView;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().addFlags(WindowManager.LayoutParams. FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_main);
+        context=this;
         initData();
         initView();
         initClick();
@@ -69,12 +75,17 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager();
         navigationView = (NavigationView)findViewById(R.id.nv_main_navigation);
         textView = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navigation_header_text);
-        textView.setText("厨师A");
+        textView.setText(user.getName());
+        UsersimpleDraweeView = (SimpleDraweeView)findViewById(R.id.navigation_header_image);
     }
     private void initClick(){
         navigationView.setNavigationItemSelectedListener(item -> {
             mDrawerLayout.closeDrawers();
-            Snackbar.make(toolbar,item.getTitle()+"被点击",Snackbar.LENGTH_SHORT).show();
+            switch (item.getItemId()){
+                case R.id.userImage:{
+                    startActivity(new Intent(context,UserActivity.class));
+                }
+            }
             return false;
         });
     }
