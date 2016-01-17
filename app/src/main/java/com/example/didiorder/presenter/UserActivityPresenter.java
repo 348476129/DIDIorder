@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.didiorder.biz.IUserBiz;
 import com.example.didiorder.biz.UserBiz;
+import com.example.didiorder.event.UserEvent;
 import com.example.didiorder.tools.UtilityTool;
 import com.example.didiorder.view.IUserActivityView;
 
@@ -15,6 +16,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.greenrobot.event.EventBus;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -27,31 +29,31 @@ private IUserActivityView iUserActivityView;
     private String TAG = "UserActivityPresenter";
     private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
-    private File tempFile = new File(Environment.getExternalStorageDirectory(),
-            getPhotoFileName());
+    private File tempFile;
 
     public UserActivityPresenter(IUserActivityView iUserActivityView) {
         this.iUserActivityView = iUserActivityView;
         this.userBiz = new UserBiz();
     }
-    public void updata(Context context, String name , String job, File file){
+    public void updata(Context context, String name , String job){
         if (job.equals("厨师")){
             job="1";
         }else if (job.equals("服务员")){
             job="2";
         }
-        if (!UtilityTool.fileIsExists(file)){
-            file=null;
+        if (!UtilityTool.fileIsExists(tempFile)){
+            tempFile=null;
         }
         iUserActivityView.setViewEnable(false);
         iUserActivityView.showLoading();
-        userBiz.updata(context,name,job,file)
+        userBiz.updata(context,name,job,tempFile)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(user -> {
                     iUserActivityView.setViewEnable(true);
-                    iUserActivityView.toMainActivity(user);
                     iUserActivityView.hideLoading();
+                    EventBus.getDefault().post(new UserEvent(Uri.fromFile(tempFile)));
+                    iUserActivityView.toMainActivity(user);
                 },throwable -> {
                     iUserActivityView.setViewEnable(true);
                     iUserActivityView.showFailedError(throwable.getLocalizedMessage());
@@ -59,7 +61,12 @@ private IUserActivityView iUserActivityView;
                 });
 
     }
+    public void setImageUri(){
+
+        iUserActivityView.setImageUri(Uri.fromFile(tempFile));
+    }
     public void setImageUri(Uri uri){
+
         iUserActivityView.setImageUri(uri);
     }
     public String getPhotoFileName() {
@@ -69,19 +76,16 @@ private IUserActivityView iUserActivityView;
         return dateFormat.format(date) + ".jpg";
     }
     public void startPhotoZoom(Uri uri) {
+        tempFile = new File(Environment.getExternalStorageDirectory(),
+                getPhotoFileName());
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
-        // crop为true是设置在开启的intent中设置显示的view可以剪裁
         intent.putExtra("crop", "true");
-
-        // aspectX aspectY 是宽高的比例
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
-
-        // outputX,outputY 是剪裁图片的宽高
         intent.putExtra("output", Uri.fromFile(tempFile));
-        intent.putExtra("outputX", 300);
-        intent.putExtra("outputY", 300);
+        intent.putExtra("outputX", 100);
+        intent.putExtra("outputY", 100);
         intent.putExtra("return-data", true);
         intent.putExtra("noFaceDetection", true);
         System.out.println("22================");

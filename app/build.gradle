@@ -24,6 +24,7 @@ android {
 }
 
 dependencies {
+    compile 'de.greenrobot:eventbus:2.4.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.github.rey5137:material:1.2.2'

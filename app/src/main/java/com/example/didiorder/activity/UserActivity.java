@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 
 import com.example.didiorder.BaseActivity;
 import com.example.didiorder.R;
@@ -22,12 +22,8 @@ import com.example.didiorder.view.IUserActivityView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gc.materialdesign.views.ButtonFlat;
 import com.gc.materialdesign.views.ButtonRectangle;
-import com.rey.material.widget.ProgressView;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,19 +44,16 @@ public class UserActivity extends BaseActivity implements IUserActivityView {
     @Bind(R.id.activity_user_updata_button)
     ButtonRectangle updataButton;
     @Bind(R.id.user_progressbar)
-    ProgressView progressView;
+    ProgressBar progressView;
     private Context context;
     private Toolbar toolbar;
     private User user;
     private UserActivityPresenter userActivityPresenter;
     private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
-    private File tempFile ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentLayout(R.layout.activity_user);
         ButterKnife.bind(this);
         context = this;
@@ -72,8 +65,6 @@ public class UserActivity extends BaseActivity implements IUserActivityView {
     private void initdata() {
         user = BmobUser.getCurrentUser(this, User.class);
         userActivityPresenter = new UserActivityPresenter(UserActivity.this);
-        tempFile = new File(Environment.getExternalStorageDirectory(),
-               userActivityPresenter. getPhotoFileName());
     }
 
     private void initview() {
@@ -93,6 +84,7 @@ public class UserActivity extends BaseActivity implements IUserActivityView {
             Uri uri = Uri.parse(user.getUser_image_url());
             userActivityPresenter.setImageUri(uri);
         }
+        hideLoading();
     }
 
     private void initClick() {
@@ -124,7 +116,7 @@ public class UserActivity extends BaseActivity implements IUserActivityView {
 
             }
         });
-        updataButton.setOnClickListener(v -> userActivityPresenter.updata(context,TilName.getEditText().getText().toString(),spinner2.getText().toString(),tempFile));
+        updataButton.setOnClickListener(v -> userActivityPresenter.updata(context,TilName.getEditText().getText().toString(),spinner2.getText().toString()));
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -137,7 +129,8 @@ public class UserActivity extends BaseActivity implements IUserActivityView {
                 break;
             case PHOTO_REQUEST_CUT:// 返回的结果
                 if (data != null)
-                    userActivityPresenter.setImageUri(Uri.fromFile(tempFile));
+                    userActivityPresenter.setImageUri();
+
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -156,6 +149,7 @@ public class UserActivity extends BaseActivity implements IUserActivityView {
     @Override
     public void showLoading() {
         progressView.setVisibility(View.VISIBLE);
+        Log.d("UserActivity","progressbar显示！");
     }
 
     @Override
@@ -166,7 +160,7 @@ public class UserActivity extends BaseActivity implements IUserActivityView {
     @Override
     public void setViewEnable(boolean isHide) {
         spinner2.setEnabled(isHide);
-        TilName.setEnabled(isHide);
+        TilName.getEditText().setEnabled(isHide);
          userImage.setEnabled(isHide);
          imageButton.setEnabled(isHide);
         updataButton.setEnabled(isHide);
@@ -179,6 +173,6 @@ public class UserActivity extends BaseActivity implements IUserActivityView {
 
     @Override
     public void showFailedError(String s) {
-        Snackbar.make(toolbar, s, Snackbar.LENGTH_SHORT).setAction("重试", v -> userActivityPresenter.updata(context,TilName.getEditText().getText().toString(),spinner2.getText().toString(),tempFile)).show();
+        Snackbar.make(toolbar, s, Snackbar.LENGTH_SHORT).setAction("重试", v -> userActivityPresenter.updata(context,TilName.getEditText().getText().toString(),spinner2.getText().toString())).show();
     }
 }

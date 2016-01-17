@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class BaseActivity extends AppCompatActivity {

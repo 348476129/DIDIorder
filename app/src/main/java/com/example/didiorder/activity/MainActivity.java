@@ -19,11 +19,14 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.didiorder.R;
+import com.example.didiorder.StartActivity;
 import com.example.didiorder.adapter.FragmentAdapter;
 import com.example.didiorder.bean.User;
+import com.example.didiorder.event.UserEvent;
 import com.example.didiorder.fragment.FragmentOrder;
 import com.example.didiorder.presenter.MainActivityPresenter;
 import com.example.didiorder.view.IMainView;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity implements IMainView{
     private  User user;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         setContentView(R.layout.activity_main);
         context=this;
         mainActivityPresenter = new MainActivityPresenter(this);
+        EventBus.getDefault().register(context);
         initData();
         initView();
         initClick();
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         UsersimpleDraweeView = (SimpleDraweeView)navigationView.getHeaderView(0).findViewById(R.id.navigation_header_image);
         if (user.getUser_image_url()!=null&&!user.getUser_image_url().isEmpty()){
             Uri uri = Uri.parse(user.getUser_image_url());
+
             mainActivityPresenter.setImageUri(uri);
         }
 
@@ -93,7 +99,18 @@ public class MainActivity extends AppCompatActivity implements IMainView{
             mDrawerLayout.closeDrawers();
             switch (item.getItemId()){
                 case R.id.userImage:{
-                    startActivity(new Intent(context,UserActivity.class));
+                    mainActivityPresenter.startNewActivity(new Intent(context,UserActivity.class));
+                    break;
+                }
+                case R.id.loginOut:{
+                    mainActivityPresenter.LogOut(context);
+                    mainActivityPresenter.startNewActivity(new Intent(context,StartActivity.class));
+                    finish();
+                    break;
+                }
+                case R.id.income:{
+                    mainActivityPresenter.startNewActivity(new Intent(context,IncomeActivity.class));
+                    break;
                 }
             }
             return false;
@@ -122,5 +139,20 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     @Override
     public void setImageUri(Uri uri) {
         UsersimpleDraweeView.setImageURI(uri);
+    }
+
+    @Override
+    public void startNewActivity(Intent intent) {
+        startActivity(intent);
+    }
+    public void onEventMainThread(UserEvent event) { //事件总线，UserActivity发送的事件，都在这里处理
+        user = BmobUser.getCurrentUser(this,User.class);
+        mainActivityPresenter.setImageUri(event.getUri());
+        textView.setText(user.getName());
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

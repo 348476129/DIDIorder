@@ -40,8 +40,6 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentLayout(R.layout.activity_login);
         context = this;
         initView();

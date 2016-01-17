@@ -27,8 +27,8 @@ public class UserLoginPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(user -> {
                     userLoginView.setViewEnable(true);
-                    userLoginView.toMainActivity(user);
                     userLoginView.hideLoading();
+                    userLoginView.toMainActivity(user);
                 },throwable -> {
                     userLoginView.setViewEnable(true);
                     userLoginView.showFailedError(throwable.getLocalizedMessage());

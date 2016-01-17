@@ -1,5 +1,6 @@
 package com.example.didiorder.view;
 
+import android.content.Intent;
 import android.net.Uri;
 
 /**
@@ -7,4 +8,5 @@ import android.net.Uri;
  */
 public interface  IMainView {
     void setImageUri(Uri uri);
+    void startNewActivity(Intent intent);
 }

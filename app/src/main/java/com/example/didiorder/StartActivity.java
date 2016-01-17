@@ -22,7 +22,6 @@ public class StartActivity extends AppCompatActivity implements IStartView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fresco.initialize(StartActivity.this);
         Bmob.initialize(this, "548fef15f05340e44f8c7328a06d4ec0");
         context = StartActivity.this;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
