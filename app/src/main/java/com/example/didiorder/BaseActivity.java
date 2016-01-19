@@ -19,6 +19,7 @@ private SystemBarTintManager tintManager;
     private View contentView;
     private LinearLayout ly_content;
     private Toolbar toolbar;
+    private FloatingActionButton floatingActionButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +28,8 @@ private SystemBarTintManager tintManager;
         setContentView(R.layout.activity_base);
         ly_content = (LinearLayout) findViewById(R.id.ly_content);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton.setVisibility(View.GONE);
          tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);
@@ -41,8 +44,8 @@ private SystemBarTintManager tintManager;
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(resId, null);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
-                LinearLayout.LayoutParams.FILL_PARENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
         contentView.setLayoutParams(layoutParams);
         contentView.setBackgroundDrawable(null);
         if (null != ly_content) {
@@ -58,5 +61,8 @@ private SystemBarTintManager tintManager;
     }
     public Toolbar getToolbar(){
         return toolbar;
+    }
+    public FloatingActionButton getFloatingActionButton(){
+        return floatingActionButton;
     }
 }

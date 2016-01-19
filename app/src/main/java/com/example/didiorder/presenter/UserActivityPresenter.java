@@ -52,7 +52,12 @@ private IUserActivityView iUserActivityView;
                 .subscribe(user -> {
                     iUserActivityView.setViewEnable(true);
                     iUserActivityView.hideLoading();
-                    EventBus.getDefault().post(new UserEvent(Uri.fromFile(tempFile)));
+                    if (tempFile!=null){
+                        EventBus.getDefault().post(new UserEvent(Uri.fromFile(tempFile)));
+                    }else {
+                        EventBus.getDefault().post(new UserEvent(Uri.parse("aaa")));
+                    }
+
                     iUserActivityView.toMainActivity(user);
                 },throwable -> {
                     iUserActivityView.setViewEnable(true);

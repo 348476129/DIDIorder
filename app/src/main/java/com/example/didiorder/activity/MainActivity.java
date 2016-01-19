@@ -17,10 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.didiorder.R;
 import com.example.didiorder.StartActivity;
 import com.example.didiorder.adapter.FragmentAdapter;
+import com.example.didiorder.bean.Ijob;
 import com.example.didiorder.bean.User;
 import com.example.didiorder.event.UserEvent;
 import com.example.didiorder.fragment.FragmentOrder;
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     private SimpleDraweeView UsersimpleDraweeView;
     private Context context;
     private MainActivityPresenter mainActivityPresenter;
+    private FloatingActionButton floatingActionButton;
+    private Ijob ijob;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     }
     private void initData(){
         user = BmobUser.getCurrentUser(this,User.class);
+        ijob = mainActivityPresenter.getJob(user);
     }
     private void initView(){
         tintManager = new SystemBarTintManager(this);
@@ -83,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setOffscreenPageLimit(2);
         setupViewPager();
+        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab) ;
+        ijob.setFloat(floatingActionButton);
         navigationView = (NavigationView)findViewById(R.id.nv_main_navigation);
         textView = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navigation_header_text);
         textView.setText(user.getName());
@@ -112,8 +119,15 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                     mainActivityPresenter.startNewActivity(new Intent(context,IncomeActivity.class));
                     break;
                 }
+                case R.id.updata:{
+                    mainActivityPresenter.startNewActivity(new Intent(context,UploadActivity.class));
+                    break;
+                }
             }
             return false;
+        });
+        floatingActionButton.setOnClickListener(v -> {
+            mainActivityPresenter.startNewActivity(new Intent(context,OrderActivity.class));
         });
     }
     private void setupViewPager() {
@@ -126,9 +140,9 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(1)));
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(2)));
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new FragmentOrder());
-        fragments.add(new FragmentOrder());
-        fragments.add(new FragmentOrder());
+        fragments.add(ijob.getFragment());
+        fragments.add(ijob.getFragment());
+        fragments.add(ijob.getFragment());
         FragmentAdapter adapter =
                 new FragmentAdapter(getSupportFragmentManager(), fragments, titles);
         mViewPager.setAdapter(adapter);
@@ -147,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     }
     public void onEventMainThread(UserEvent event) { //事件总线，UserActivity发送的事件，都在这里处理
         user = BmobUser.getCurrentUser(this,User.class);
-        mainActivityPresenter.setImageUri(event.getUri());
+        mainActivityPresenter.setImageUri(Uri.parse(user.getUser_image_url()));
         textView.setText(user.getName());
     }
     @Override

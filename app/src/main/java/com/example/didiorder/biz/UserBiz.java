@@ -83,6 +83,7 @@ public class UserBiz implements IUserBiz {  //使用接口能够让 高层逻辑
                     }
                 });
             }else {
+                Log.d("ddd","无图片上传");
                 User newUser = new User();
                 newUser.setJob(job);
                 newUser.setName(name);
@@ -90,11 +91,13 @@ public class UserBiz implements IUserBiz {  //使用接口能够让 高层逻辑
                 newUser.update(context,user.getObjectId(),new UpdateListener() {
                     @Override
                     public void onSuccess() {
+                        Log.d("ddd","无图片上传成功");
                         subscriber.onNext(user);
                         subscriber.onCompleted();
                     }
                     @Override
                     public void onFailure(int code, String msg) {
+                        Log.d("ddd","无图片上传失败");
                         subscriber.onError(new Throwable(new ErrorList().getErrorMsg(code)));
                     }
                 });
