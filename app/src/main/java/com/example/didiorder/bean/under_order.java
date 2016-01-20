@@ -10,6 +10,16 @@ public class under_order extends BmobObject {
     private boolean isrefund,isfinished,ispay;
     private Integer price,count;
 
+    public under_order(String dishes, Integer count, Integer price, boolean ispay, boolean isfinished, boolean isrefund, String table_number) {
+        this.dishes = dishes;
+        this.count = count;
+        this.price = price;
+        this.ispay = ispay;
+        this.isfinished = isfinished;
+        this.isrefund = isrefund;
+        this.table_number = table_number;
+    }
+
     public Integer getCount() {
         return count;
     }
