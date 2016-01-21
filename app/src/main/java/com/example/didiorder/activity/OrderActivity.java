@@ -198,6 +198,8 @@ public class OrderActivity extends BaseActivity implements OrderView{
     @Override
     public void finishActivity() {
         finish();
+        MyApplication.hashMap.clear();
+        MyApplication.list.clear();
     }
 
     private void hideKeyboard() {

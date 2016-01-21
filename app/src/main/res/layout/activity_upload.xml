@@ -66,6 +66,7 @@
                 android:layout_height="wrap_content" />
         </android.support.design.widget.TextInputLayout>
         <com.gc.materialdesign.views.ButtonRectangle
+            android:layout_marginBottom="60dp"
             android:id="@+id/activity_upload_updata_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"

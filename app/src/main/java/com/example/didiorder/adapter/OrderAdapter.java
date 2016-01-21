@@ -57,6 +57,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyViewHolder
         holder.checkBox.setEnabled(false);
         if (dishesList.get(position).getImageUrl()!=null){
             holder.simpleDraweeView.setImageURI(Uri.parse(dishesList.get(position).getImageUrl()));
+        }else {
+            holder.simpleDraweeView.setImageURI(Uri.parse("res://com.example.didiorder/"+R.mipmap.start_image));
         }
         holder.cardView.setOnClickListener(v -> {
              String id= dishesList.get(position).getObjectId();

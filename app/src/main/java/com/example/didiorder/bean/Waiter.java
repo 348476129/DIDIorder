@@ -16,7 +16,7 @@ public class Waiter extends Ijob {
     }
 
     @Override
-    public Fragment getFragment() {
+    public FragmentOrder getFragment() {
         return new FragmentOrder();
     }
 }

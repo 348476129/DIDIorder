@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/view"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                fresco:placeholderImage="@mipmap/start_image" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toEndOf="@+id/view"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/order_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:text="鱼香肉丝"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/order_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:text="17元" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp">
+                <com.rey.material.widget.CheckBox
+                    android:id="@+id/checkBox"
+                    android:gravity="center"
+                    style="@style/Material.Drawable.CheckBox"
+                    android:textColor="@color/colorAccent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="是否做好"/>
+                <com.gc.materialdesign.views.ButtonRectangle
+                    android:id="@+id/buttonRectangle"
+                    android:background="@color/colorAccent"
+                    android:text="申请退菜"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"></com.gc.materialdesign.views.ButtonRectangle>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

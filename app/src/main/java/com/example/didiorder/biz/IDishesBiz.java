@@ -19,6 +19,7 @@ import rx.Observable;
 public interface IDishesBiz {
     Observable<Dishes> updata(Context context , String name, Integer price, File file);
     Observable<List<Dishes>> getDishesList(Context context,int page);
-    Observable<List<String>> updataDeshes(Context context, Order order);
+    Observable<Order> updataDeshes(Context context, Order order);
     Observable<Boolean> updataUnderOrder(Context context, List<BmobObject> lis);
+    Observable<List<Order>> getOrderList(Context context,int page);
 }

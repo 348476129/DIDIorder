@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 
+import com.example.didiorder.fragment.FragmentOrder;
+
 import cn.bmob.v3.BmobUser;
 
 /**
@@ -15,5 +17,5 @@ public abstract class Ijob {
         return user;
     }
     public abstract void setFloat(FloatingActionButton floatingActionButton);
-   public abstract Fragment getFragment();
+   public abstract FragmentOrder getFragment();
 }

@@ -42,6 +42,9 @@ public class OrderActivityPresenter {
         iDishesBiz.getDishesList(context,page).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(dishes ->{
+                    for (int i = 0;i<dishes.size();i++){
+                        MyApplication.hashMap.put(dishes.get(i).getObjectId(),dishes.get(i).getPrice());
+                    }
                     if (orderAdapter==null){
                         orderAdapter = new OrderAdapter(context,dishes);
                         orderView.SetAdapter(orderAdapter);
@@ -69,10 +72,12 @@ public class OrderActivityPresenter {
         Order order = new Order(a,b,false,false, MyApplication.list);
         iDishesBiz.updataDeshes(context,order).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(list-> Observable.from(list))
-                .subscribe(list1->{
-                    under_order UnderOrder = new under_order(list1,1,MyApplication.hashMap.get(list1),false,false,false,b);
-                    UnderOrderList.add(UnderOrder);
+                .subscribe(order1->{
+                    for (int i=0;i<order1.getDisheses().size();i++){
+                        under_order UnderOrder = new under_order(order1.getDisheses().get(i),order1.getObjectId(),1,MyApplication.hashMap.get(order1.getDisheses().get(i)),false,false,false,b);
+                        UnderOrderList.add(UnderOrder);
+                    }
+
                 },throwable -> {
                     orderView.showSnackBar(throwable.getLocalizedMessage());
                     orderView.setViewEnable(true);

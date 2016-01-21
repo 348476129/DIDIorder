@@ -9,15 +9,38 @@ public class under_order extends BmobObject {
     private String dishes,table_number;
     private boolean isrefund,isfinished,ispay;
     private Integer price,count;
+    private String orderId;
 
-    public under_order(String dishes, Integer count, Integer price, boolean ispay, boolean isfinished, boolean isrefund, String table_number) {
+    public under_order(String dishes, String orderId, Integer count, Integer price, boolean ispay, boolean isfinished, boolean isrefund, String table_number) {
         this.dishes = dishes;
+        this.orderId = orderId;
         this.count = count;
         this.price = price;
         this.ispay = ispay;
         this.isfinished = isfinished;
         this.isrefund = isrefund;
         this.table_number = table_number;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    @Override
+    public String toString() {
+        return "under_order{" +
+                "dishes='" + dishes + '\'' +
+                ", table_number='" + table_number + '\'' +
+                ", isrefund=" + isrefund +
+                ", isfinished=" + isfinished +
+                ", ispay=" + ispay +
+                ", price=" + price +
+                ", count=" + count +
+                '}';
     }
 
     public Integer getCount() {

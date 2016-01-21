@@ -14,11 +14,15 @@ import java.util.List;
 public class MyApplication extends Application {
     public static List<String> list;
     public  static HashMap<String,Integer> hashMap;
+    public static  HashMap<String,String> deshesMap;
+    public static  HashMap<String,String> imageMap;
     @Override
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(getApplicationContext());
         list = new ArrayList<>();
         hashMap = new HashMap<>();
+        deshesMap=new HashMap<>();
+        imageMap =new HashMap<>();
     }
 }

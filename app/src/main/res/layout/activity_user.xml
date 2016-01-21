@@ -68,6 +68,7 @@
             android:layout_below="@+id/title_text" />
 
         <com.gc.materialdesign.views.ButtonRectangle
+            android:layout_marginBottom="60dp"
             android:id="@+id/activity_user_updata_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"

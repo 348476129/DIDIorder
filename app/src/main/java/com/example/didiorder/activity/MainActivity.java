@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.didiorder.R;
 import com.example.didiorder.StartActivity;
 import com.example.didiorder.adapter.FragmentAdapter;
+import com.example.didiorder.adapter.StickListTaskAdapter;
 import com.example.didiorder.bean.Ijob;
 import com.example.didiorder.bean.User;
 import com.example.didiorder.event.UserEvent;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     private MainActivityPresenter mainActivityPresenter;
     private FloatingActionButton floatingActionButton;
     private Ijob ijob;
+    private FragmentOrder fragmentAll,fragmentUnder,fragmentFinish;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         context=this;
         mainActivityPresenter = new MainActivityPresenter(this);
         EventBus.getDefault().register(context);
+        tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setNavigationBarTintEnabled(true);
         initData();
         initView();
         initClick();
@@ -69,11 +74,12 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     private void initData(){
         user = BmobUser.getCurrentUser(this,User.class);
         ijob = mainActivityPresenter.getJob(user);
+        mainActivityPresenter.getOrder();
+        fragmentAll = ijob.getFragment();
+        fragmentFinish= ijob.getFragment();
+        fragmentUnder =  ijob.getFragment();
     }
     private void initView(){
-        tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        tintManager.setNavigationBarTintEnabled(true);
         tintManager.setStatusBarTintResource(R.mipmap.status);
         tintManager.setNavigationBarTintResource(R.mipmap.navigation);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -140,9 +146,9 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(1)));
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(2)));
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(ijob.getFragment());
-        fragments.add(ijob.getFragment());
-        fragments.add(ijob.getFragment());
+        fragments.add(fragmentAll);
+        fragments.add(fragmentUnder);
+        fragments.add(fragmentFinish);
         FragmentAdapter adapter =
                 new FragmentAdapter(getSupportFragmentManager(), fragments, titles);
         mViewPager.setAdapter(adapter);
@@ -159,6 +165,17 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     public void startNewActivity(Intent intent) {
         startActivity(intent);
     }
+
+    @Override
+    public Context getContext() {
+        return context;
+    }
+
+    @Override
+    public void setAdapter(StickListTaskAdapter stickListTaskAdapter) {
+        fragmentAll.setAdapter(stickListTaskAdapter);
+    }
+
     public void onEventMainThread(UserEvent event) { //事件总线，UserActivity发送的事件，都在这里处理
         user = BmobUser.getCurrentUser(this,User.class);
         mainActivityPresenter.setImageUri(Uri.parse(user.getUser_image_url()));

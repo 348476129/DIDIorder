@@ -106,12 +106,12 @@ public class DishesBiz implements IDishesBiz {
     }
 
     @Override
-    public Observable<List<String>> updataDeshes(Context context, Order order) {
-        Observable<List<String>>  observable = Observable.create(subscriber -> {
+    public Observable<Order> updataDeshes(Context context, Order order) {
+        Observable<Order>  observable = Observable.create(subscriber -> {
             order.save(context, new SaveListener() {
                 @Override
                 public void onSuccess() {
-                    subscriber.onNext(order.getDisheses());
+                    subscriber.onNext(order);
                     subscriber.onCompleted();
                 }
 
@@ -136,6 +136,29 @@ public class DishesBiz implements IDishesBiz {
 
                 @Override
                 public void onFailure(int i, String s) {
+                    subscriber.onError(new Throwable(new ErrorList().getErrorMsg(i)));
+                }
+            });
+        });
+        return observable;
+    }
+
+    @Override
+    public Observable<List<Order>> getOrderList(Context context,int page) {
+        Observable<List<Order>>  observable = Observable.create(subscriber -> {
+            BmobQuery<Order> dishesBmobQuery = new BmobQuery<Order>();
+            dishesBmobQuery.setLimit(5);
+            dishesBmobQuery.order("-createdAt");
+            dishesBmobQuery.setSkip((page-1)*5);
+            dishesBmobQuery.findObjects(context, new FindListener<Order>() {
+                @Override
+                public void onSuccess(List<Order> list) {
+                        subscriber.onNext(list);
+                        subscriber.onCompleted();
+                }
+
+                @Override
+                public void onError(int i, String s) {
                     subscriber.onError(new Throwable(new ErrorList().getErrorMsg(i)));
                 }
             });
