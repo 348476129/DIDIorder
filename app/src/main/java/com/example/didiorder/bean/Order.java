@@ -31,6 +31,9 @@ public class Order extends BmobObject{
         this.iscomplete = iscomplete;
         this.disheses = disheses;
     }
+    public Order(){
+
+    }
 
     public String getHeadcount() {
         return headcount;

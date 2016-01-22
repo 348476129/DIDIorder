@@ -65,6 +65,7 @@ public class OrderActivity extends BaseActivity implements OrderView{
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         floatingActionButton = getFloatingActionButton();
         floatingActionButton.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,R.color.colorPrimary,R.color.deep,R.color.colorPrimaryDark);
 
     }
     private void initClick(){
@@ -92,49 +93,7 @@ public class OrderActivity extends BaseActivity implements OrderView{
                         orderActivityPresenter.getDishes();
                     }
                 }
-                floatingActionButton.setOnClickListener(v -> {
-                    if (MyApplication.list.size()==0){
-                        TextView textView = new TextView(context);
-                        textView.setText("请至少选择一个菜");
-                        SimpleDialog mDialog = new SimpleDialog(context);
-                        mDialog.setTitle("错误");
-                        mDialog.setContentView(textView);
-                        mDialog.positiveAction("确定");
-                        mDialog.setCancelable(true);
-                        mDialog.positiveActionClickListener(v1 -> mDialog.dismiss());
-                        mDialog.show();
-                    }else {
-                        SimpleDialog mDialog = new SimpleDialog(context);
-                        mDialog.setTitle("客人信息");
-                        View view = LayoutInflater.from(context).inflate(R.layout.dialog, null);
-                        TextInputLayout tipPeopleNum,tipTableId;
-                        tipPeopleNum = (TextInputLayout)view.findViewById(R.id.peopleNum);
-                        tipTableId = (TextInputLayout)view.findViewById(R.id.table_id);
-                        mDialog.setContentView(view);
-                        mDialog.positiveAction("提交");
-                        mDialog.negativeAction("取消");
-                        mDialog.positiveActionClickListener(v1 -> {
-                            hideKeyboard();
-                            String a = tipPeopleNum.getEditText().getText().toString();
-                            String b = tipTableId.getEditText().getText().toString();
-                            if (a.equals("")||a==null){
-                                tipPeopleNum.setEnabled(true);
-                                tipPeopleNum.setError("请输入人数");
-                            }else if (a.equals("")||a==null){
-                                tipTableId.setEnabled(true);
-                                tipTableId.setError("请输入桌号");
-                            }else {
-                                tipPeopleNum.setEnabled(false);
-                                tipTableId.setEnabled(false);
-                                orderActivityPresenter.Updata(a,b);
-                                mDialog.dismiss();
-                            }
-                        });
-                        mDialog.negativeActionClickListener(v1 -> mDialog.dismiss());
-                        mDialog.show();
-                    }
 
-                });
             }
 
             @Override
@@ -150,6 +109,49 @@ public class OrderActivity extends BaseActivity implements OrderView{
                 }
 
             }
+        });
+        floatingActionButton.setOnClickListener(v -> {
+            if (MyApplication.list.size()==0){
+                TextView textView = new TextView(context);
+                textView.setText("请至少选择一个菜");
+                SimpleDialog mDialog = new SimpleDialog(context);
+                mDialog.setTitle("错误");
+                mDialog.setContentView(textView);
+                mDialog.positiveAction("确定");
+                mDialog.setCancelable(true);
+                mDialog.positiveActionClickListener(v1 -> mDialog.dismiss());
+                mDialog.show();
+            }else {
+                SimpleDialog mDialog = new SimpleDialog(context);
+                mDialog.setTitle("客人信息");
+                View view = LayoutInflater.from(context).inflate(R.layout.dialog, null);
+                TextInputLayout tipPeopleNum,tipTableId;
+                tipPeopleNum = (TextInputLayout)view.findViewById(R.id.peopleNum);
+                tipTableId = (TextInputLayout)view.findViewById(R.id.table_id);
+                mDialog.setContentView(view);
+                mDialog.positiveAction("提交");
+                mDialog.negativeAction("取消");
+                mDialog.positiveActionClickListener(v1 -> {
+                    hideKeyboard();
+                    String a = tipPeopleNum.getEditText().getText().toString();
+                    String b = tipTableId.getEditText().getText().toString();
+                    if (a.equals("")||a==null){
+                        tipPeopleNum.setEnabled(true);
+                        tipPeopleNum.setError("请输入人数");
+                    }else if (a.equals("")||a==null){
+                        tipTableId.setEnabled(true);
+                        tipTableId.setError("请输入桌号");
+                    }else {
+                        tipPeopleNum.setEnabled(false);
+                        tipTableId.setEnabled(false);
+                        orderActivityPresenter.Updata(a,b);
+                        mDialog.dismiss();
+                    }
+                });
+                mDialog.negativeActionClickListener(v1 -> mDialog.dismiss());
+                mDialog.show();
+            }
+
         });
     }
 

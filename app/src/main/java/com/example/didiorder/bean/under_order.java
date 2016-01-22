@@ -21,7 +21,7 @@ public class under_order extends BmobObject {
         this.isrefund = isrefund;
         this.table_number = table_number;
     }
-
+    public under_order(){}
     public String getOrderId() {
         return orderId;
     }

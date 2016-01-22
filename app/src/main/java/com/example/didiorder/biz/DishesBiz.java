@@ -1,6 +1,7 @@
 package com.example.didiorder.biz;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.didiorder.bean.Dishes;
 import com.example.didiorder.bean.Order;
@@ -147,12 +148,16 @@ public class DishesBiz implements IDishesBiz {
     public Observable<List<Order>> getOrderList(Context context,int page) {
         Observable<List<Order>>  observable = Observable.create(subscriber -> {
             BmobQuery<Order> dishesBmobQuery = new BmobQuery<Order>();
-            dishesBmobQuery.setLimit(5);
+            dishesBmobQuery.setLimit(20);
             dishesBmobQuery.order("-createdAt");
             dishesBmobQuery.setSkip((page-1)*5);
             dishesBmobQuery.findObjects(context, new FindListener<Order>() {
                 @Override
                 public void onSuccess(List<Order> list) {
+                    if (list.size()==0){
+                        subscriber.onError(new Throwable("没有数据"));
+                    }
+                    Log.d("TAG",list.size()+"");
                         subscriber.onNext(list);
                         subscriber.onCompleted();
                 }
